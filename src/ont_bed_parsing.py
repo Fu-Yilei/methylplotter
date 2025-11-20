@@ -9,7 +9,7 @@ def read_modkit_bed(path: str, *, drop_first_col: bool = False, percent_col: int
     Minimal parser for ONT modkit BED-like output (no checks).
     Assumes columns: chr, start, end, ..., percent_col (0-based).
     """
-    df = pd.read_csv(path, sep="\t", header=None)
+    df = pd.read_csv(path, sep="\t", header=None, comment="#")
     if drop_first_col:
         df = df.iloc[:, 1:]
 

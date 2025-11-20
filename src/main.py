@@ -43,12 +43,22 @@ def main(argv):
             out_path = f"{args.output}"
         )
     elif args.platform == "pb":
-        print("pb")  # Placeholder for PacBio processing
-        
-
-    print(args)
-
-
+        named_bed_paths = {name: path for name, path in zip(args.sample, args.bed)}
+        series, raw_region = prepare_series(
+            named_bed_paths,
+            region,
+            window_size=20,
+            min_points_for_smooth=5,
+            drop_first_col=False,
+            percent_col=8
+        )
+        draw_series(
+            series,
+            region,
+            annotate_spans=[(gene_name_, gene_start_, gene_end_)],
+            annotate_vlines=[(line[0], int(line[1]))] if args.line else None,
+            out_path = f"{args.output}"
+        )
 
 if __name__ == "__main__":
     main(sys.argv[1:])
