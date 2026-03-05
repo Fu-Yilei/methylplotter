@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "methylplotter"
+version = "0.2.0"
+description = "Plot methylation profiles from haplotype-phased BED files"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+  {name = "methylplotter contributors"}
+]
+dependencies = [
+  "numpy>=1.24",
+  "pandas>=1.5",
+  "matplotlib>=3.7"
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest>=8.0"
+]
+
+[project.scripts]
+methylplotter = "methylplotter.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
