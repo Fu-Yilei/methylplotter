@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 from argparse import Namespace
-from typing import Dict, Optional
+from typing import Dict
 
 from .model import Gene, Region, RunConfig, VerticalLine
 
 
-PLATFORMS = {"ont": 10, "pb": 8}
+PLATFORMS = {"ont", "pb"}
 
 
 def parse_gene(gene_text: str) -> Gene:
@@ -53,6 +53,8 @@ def build_named_bed_paths(samples: list[str], beds: list[str]) -> Dict[str, str]
         raise ValueError(
             f"The number of samples ({len(samples)}) must match the number of BED files ({len(beds)})."
         )
+    if len(set(samples)) != len(samples):
+        raise ValueError("Sample names must be unique.")
     return dict(zip(samples, beds))
 
 
@@ -66,6 +68,8 @@ def build_config(args: Namespace) -> RunConfig:
         raise ValueError("--window_size must be >= 1.")
     if args.min_points_for_smooth < 1:
         raise ValueError("--min_points_for_smooth must be >= 1.")
+    if args.percent_col is not None and args.percent_col < 0:
+        raise ValueError("--percent_col must be >= 0.")
 
     gene = parse_gene(args.gene)
     region = (
@@ -91,11 +95,9 @@ def build_config(args: Namespace) -> RunConfig:
         window_size=args.window_size,
         min_points_for_smooth=args.min_points_for_smooth,
         vline=vline,
+        percent_col=args.percent_col,
+        verbose=args.verbose,
     )
-
-
-def percent_col_for_platform(platform: str) -> int:
-    return PLATFORMS[platform]
 
 
 def _validate_region_bounds(start: int, end: int, label: str) -> None:

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Optional, Tuple
 
 
 @dataclass(frozen=True)
@@ -38,6 +38,5 @@ class RunConfig:
     window_size: int
     min_points_for_smooth: int
     vline: Optional[VerticalLine]
-
-
-Series = List[Tuple[str, object, object]]
+    percent_col: Optional[int]
+    verbose: bool

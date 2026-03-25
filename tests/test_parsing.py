@@ -28,6 +28,8 @@ def test_build_config_default_region_and_pairs():
         line="marker,150",
         window_size=20,
         min_points_for_smooth=3,
+        percent_col=None,
+        verbose=False,
     )
 
     config = build_config(args)
@@ -49,7 +51,28 @@ def test_build_config_rejects_mismatched_samples_and_beds():
         line=None,
         window_size=20,
         min_points_for_smooth=3,
+        percent_col=None,
+        verbose=False,
     )
 
     with pytest.raises(ValueError, match="must match"):
+        build_config(args)
+
+
+def test_build_config_rejects_duplicate_sample_names():
+    args = argparse.Namespace(
+        platform="ont",
+        bed=["a.bed", "b.bed"],
+        sample=["dup", "dup"],
+        gene="chr1:100-200:GENE1",
+        region=None,
+        output="out",
+        line=None,
+        window_size=20,
+        min_points_for_smooth=3,
+        percent_col=None,
+        verbose=False,
+    )
+
+    with pytest.raises(ValueError, match="unique"):
         build_config(args)

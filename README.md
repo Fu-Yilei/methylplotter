@@ -7,9 +7,10 @@ Plot methylation from haplotype-phased BED files.
 ## What It Does
 - Parses ONT/PacBio BED-like methylation files
 - Filters records to a genomic region
-- Applies sliding-window smoothing to `% modified`
+- Applies sliding-window smoothing to `% modified` (point-based window)
 - Draws publication-ready line plots for one or more samples
-- Annotates genes and optional vertical marker lines
+- Annotates genes and optional vertical markecr lines
+- Auto-detects methylation percent column per file by platform, with manual override
 
 ## Installation
 
@@ -35,16 +36,25 @@ methylplotter \
   --line breakpoint,80170000 \
   --window_size 20 \
   --min_points_for_smooth 3 \
+  --verbose \
   --output methylation_plot
 ```
 
+Equivalent module invocation:
+
+```bash
+python -m methylplotter --platform ont ...
+```
+
 Notes:
-- `--platform ont` uses methylation percent from BED column index `10`
-- `--platform pb` uses methylation percent from BED column index `8`
+- `--window_size` is a number of rows/points, not base pairs
+- By default, methylation percent column is auto-detected per input file (`ont` prefers index `10`, `pb` prefers index `3`)
+- Use `--percent_col <index>` to force one column across all input files
+- `--verbose` prints per-sample row counts, smoothed point counts, and the chosen percent column
 - If `--output` has no extension, both `PNG` and `SVG` are written
 
 ## Test Data
-Synthetic test data is bundled in [`tests/data/`](/users/u254106/Yilei/130/methylplotter/tests/data):
+Synthetic test data is bundled in `tests/data/`:
 - `ont_sample_a.bed`
 - `ont_sample_b.bed`
 - `pb_sample_a.bed`
